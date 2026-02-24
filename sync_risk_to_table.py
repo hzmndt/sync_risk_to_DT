@@ -1,7 +1,7 @@
 import subprocess
 import json
 import sys
-import time
+import argparse
 
 # Configuration
 PROJECT = "678335183637"
@@ -15,6 +15,14 @@ def get_access_token():
         return token
     except Exception as e:
         print(f"Error getting access token: {e}")
+        sys.exit(1)
+
+def activate_service_account(key_file):
+    try:
+        print(f"Activating service account with key file: {key_file}")
+        subprocess.check_call(["gcloud", "auth", "activate-service-account", "--key-file", key_file])
+    except Exception as e:
+        print(f"Error activating service account: {e}")
         sys.exit(1)
 
 def api_call(url, method="GET", body=None):
@@ -37,6 +45,13 @@ def api_call(url, method="GET", body=None):
         return None
 
 def sync_risk_config():
+    parser = argparse.ArgumentParser(description="Sync Chronicle Risk Config to Data Table")
+    parser.add_argument("--key-file", help="Path to the service account JSON key file")
+    args = parser.parse_args()
+
+    if args.key_file:
+        activate_service_account(args.key_file)
+
     base_url = f"https://{LOCATION}-chronicle.googleapis.com/v1alpha/projects/{PROJECT}/locations/{LOCATION}/instances/{INSTANCE}"
     
     # 1. Fetch Risk Config
@@ -45,6 +60,8 @@ def sync_risk_config():
     config = api_call(risk_config_url)
     if not config or "defaultDetectionRiskScore" not in config:
         print("Failed to fetch Risk Config.")
+        if config and "error" in config:
+            print(f"Error: {config['error']['message']}")
         return
 
     row_data = [
