@@ -20,15 +20,13 @@ Additionally, ensure the identity has access to the following API scope:
 ## How to Run
 
 ### Option 1: Using User Authentication
-If you are already logged in via `gcloud`:
 ```bash
-python3 sync_risk_to_table.py
+python3 sync_risk_to_table.py --project [PROJECT_NUMBER] --location [LOCATION] --instance [INSTANCE_ID]
 ```
 
 ### Option 2: Using a Service Account
-If you want to use a service account JSON key file:
 ```bash
-python3 sync_risk_to_table.py --key-file path/to/your-service-account-key.json
+python3 sync_risk_to_table.py --key-file path/to/key.json --project [PROJECT_NUMBER] --location [LOCATION] --instance [INSTANCE_ID]
 ```
 
 ## What the Script Does

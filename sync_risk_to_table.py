@@ -4,9 +4,10 @@ import sys
 import argparse
 
 # Configuration
-PROJECT = "678335183637"
-LOCATION = "asia-southeast1"
-INSTANCE = "08189574-f559-4428-92dd-0314f7723c6f"
+# Configuration (Placeholders)
+PROJECT = "<YOUR_PROJECT_NUMBER>"
+LOCATION = "<YOUR_LOCATION>"
+INSTANCE = "<YOUR_INSTANCE_ID>"
 TABLE_ID = "risk_config_storage"
 
 def get_access_token():
@@ -47,12 +48,23 @@ def api_call(url, method="GET", body=None):
 def sync_risk_config():
     parser = argparse.ArgumentParser(description="Sync Chronicle Risk Config to Data Table")
     parser.add_argument("--key-file", help="Path to the service account JSON key file")
+    parser.add_argument("--project", default=PROJECT, help="GCP Project Number")
+    parser.add_argument("--location", default=LOCATION, help="Chronicle Region (e.g. us, asia-southeast1)")
+    parser.add_argument("--instance", default=INSTANCE, help="Chronicle Instance ID")
     args = parser.parse_args()
+
+    project = args.project
+    location = args.location
+    instance = args.instance
+
+    if project.startswith("<") or location.startswith("<") or instance.startswith("<"):
+        print("Error: Please provide --project, --location, and --instance arguments or update the script defaults.")
+        sys.exit(1)
 
     if args.key_file:
         activate_service_account(args.key_file)
 
-    base_url = f"https://{LOCATION}-chronicle.googleapis.com/v1alpha/projects/{PROJECT}/locations/{LOCATION}/instances/{INSTANCE}"
+    base_url = f"https://{location}-chronicle.googleapis.com/v1alpha/projects/{project}/locations/{location}/instances/{instance}"
     
     # 1. Fetch Risk Config
     print("Fetching Risk Config...")
