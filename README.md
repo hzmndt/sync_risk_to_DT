@@ -44,7 +44,7 @@ python3 sync_risk_to_table.py --key-file path/to/key.json --project [PROJECT_NUM
 ## Verification
 
 You can verify the data in the Chronicle UI:
-[Risk Config Storage Table](https://gvt-test-asia-southeast1.backstory.chronicle.security/settings/data-tables)
+[Risk Config Storage Table](https://<YOUR_CHRONICLE_DOMAIN>/settings/data-tables)
 
 ### Sample Output
 ![Sample Data Table](sample_dt.png)
